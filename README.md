@@ -4,13 +4,9 @@ PicSurge is an Android application that allows users to generate random placehol
 
 ## Features
 
-- Generate random placeholder images by clicking on the image button.
+- Generate random placeholder images by clicking on the image.
 - Display a toast message indicating the network connectivity status.
 - Automatically fetches images from the [LoremFlickr](https://loremflickr.com/) service.
-
-## Screenshots
-
-Include screenshots or GIFs of your application here to showcase its functionality and user interface.
 
 ## Getting Started
 
@@ -18,7 +14,7 @@ These instructions will help you get a copy of the project up and running on you
 
 ### Prerequisites
 
-- Android Studio 4.0 or later
+- Android Studio
 - Android SDK
 - Java Development Kit (JDK) 8 or later
 
