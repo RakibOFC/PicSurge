@@ -4,15 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.StrictMode;
 
 import com.rakibofc.picsurge.databinding.ActivityMainBinding;
 import com.rakibofc.picsurge.receivers.ConnectionReceiver;
 import com.rakibofc.picsurge.viewmodels.MainViewModel;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
+
+import java.io.IOException;
+import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,29 +41,47 @@ public class MainActivity extends AppCompatActivity {
         // Add action in intent filter
         intentFilter.addAction(CONNECTIVITY_ACTION);
 
-        // Toast connection status message
-        // Toast.makeText(this, status, Toast.LENGTH_SHORT).show();
+        // Get and set image from ViewModel
+        viewModel.getImage().observe(this, binding.imageBtn::setImageBitmap);
+
+        /*
+        * viewModel.getImage().observe(this, new Observer<Drawable>() {
+            @Override
+            public void onChanged(Drawable drawable) {
+                binding.imageBtn.setImageDrawable(drawable);
+            }
+        });
+        * */
 
         binding.imageBtn.setOnClickListener(v -> {
 
             String imageUrl = "https://loremflickr.com/320/240";
 
-            Picasso.get().load(imageUrl).into(new Target() {
-                @Override
-                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                    binding.imageBtn.setImageBitmap(bitmap);
+            new Thread(() -> {
+                try {
+                    synchronized (this) {
+                        wait(500);
+
+                        runOnUiThread(() -> {
+
+                            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                            StrictMode.setThreadPolicy(policy);
+
+                            try {
+                                URL url = new URL(imageUrl);
+
+                                binding.imageBtn.setImageBitmap(
+                                        BitmapFactory.decodeStream(url.openConnection().getInputStream()));
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-
-                @Override
-                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-                }
-
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                }
-            });
+            }).start();
         });
     }
 
