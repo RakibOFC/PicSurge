@@ -22,7 +22,7 @@ These instructions will help you get a copy of the project up and running on you
 
 1. Clone the repository to your local machine using the following command:
 
-`git clone https://github.com/your-username/picsurge-android.git`
+`git clone https://github.com/RakibOFC/picsurge-android.git`
 
 2. Open Android Studio and select "Open an existing project".
 3. Navigate to the cloned project directory and select it.
